@@ -1,4 +1,3 @@
-//const startingTime = performance.now();
 const sectionsList = document.querySelectorAll('section');
 const navigationMenu = document.querySelector('#navbar__list');
 const documentFragment = document.createDocumentFragment();
@@ -9,16 +8,12 @@ createNavigationMenu();
 
 
 
-//console.log(performance.now()-startingTime);
-
 
 function addActiveClass() {
-    // Do something with the scroll position
     for (let section of sectionsList) {
 
         if (isInViewPort(section)){
             let link = links.find((l)=> l.hash === `#${section.id}`);
-            console.log(link);
             link.classList.add('active');
             section.classList.add('active');
         }else {
@@ -40,7 +35,7 @@ document.addEventListener('scroll', ()=> {
 });
 
 
-
+// listen for links clicks and change default behavior
 navigationMenu.addEventListener('click',(event)=> {
     const link  = event.target;
     if (link.hash !== undefined){
@@ -49,6 +44,7 @@ navigationMenu.addEventListener('click',(event)=> {
         scrollToSection(link);
     }
 });
+
 
 function scrollToSection(link) {
     let section = document.querySelector(link.hash);
@@ -60,10 +56,22 @@ function scrollToSection(link) {
 }
 
 function isInViewPort(element) {
-    return element.getBoundingClientRect().top >=0
-        && element.getBoundingClientRect().left >=0
-        && element.getBoundingClientRect().right <= window.innerWidth
-        && element.getBoundingClientRect().bottom <= window.innerHeight;
+    let rect = element.getBoundingClientRect();
+    //check if on large screens
+    if(window.matchMedia('(min-width:35em)').matches){
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    } else {
+        return (
+            rect.top >= 0 && rect.top <=window.innerHeight&&
+            rect.left >= 0
+        );
+    }
+
 }
 
 
@@ -84,10 +92,10 @@ function createNavigationItem(section) {
 }
 
 function createNavigationItems() {
-    for (let section of sectionsList) {
+    sectionsList.forEach((section=>{
         let navigationItem = createNavigationItem(section);
         documentFragment.appendChild(navigationItem);
-    }
+    }));
 }
 
 function createNavigationMenu() {
