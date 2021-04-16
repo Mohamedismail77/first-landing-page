@@ -24,6 +24,7 @@ function addActiveClass() {
     }
 }
 
+// listen for scroll event to handle active state
 document.addEventListener('scroll', ()=> {
     if (!ticking) {
         window.requestAnimationFrame(()=> {
